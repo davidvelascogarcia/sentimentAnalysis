@@ -56,7 +56,7 @@ install:
 
 # Instalar TextBlob
 
-  - sudo pip install textbob
+  - sudo pip install textblob
 
 # Tareas a ejecutar antes de nuestra prueba
 
