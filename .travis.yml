@@ -57,6 +57,7 @@ install:
 # Instalar TextBlob
 
   - sudo pip install textblob
+  - sudo pip install googletrans
 
 # Tareas a ejecutar antes de nuestra prueba
 

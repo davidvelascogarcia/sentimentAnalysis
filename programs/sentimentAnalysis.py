@@ -21,6 +21,7 @@
 # Libraries
 
 import datetime
+from googletrans import Translator
 import os
 import platform
 from textblob import TextBlob
@@ -40,6 +41,12 @@ print("Starting system...")
 
 print("")
 print("Loading Sentiment Analysis engine...")
+
+print("")
+print("")
+print("**************************************************************************")
+print("YARP configuration:")
+print("**************************************************************************")
 
 print("")
 print("Initializing YARP network...")
@@ -79,15 +86,48 @@ print("")
 print("Detecting system and release version...")
 systemPlatform = platform.system()
 systemRelease = platform.release()
-print(" ")
-print("***********************")
+print("")
+print("")
+print("**************************************************************************")
 print("Configuration detected:")
-print("***********************")
+print("**************************************************************************")
 print("Platform:")
 print(systemPlatform)
 print("Release:")
 print(systemRelease)
 
+print("")
+print("")
+print("**************************************************************************")
+print("Translator configuration:")
+print("**************************************************************************")
+
+# Get languages data
+print("")
+print("Getting languages data ...")
+languagesData = configparser.ConfigParser()
+languagesData.read('../config/languages.ini')
+languagesData.sections()
+
+inputLanguage = languagesData['Languages']['language-input']
+outputLanguage = languagesData['Languages']['language-output']
+
+print("Data obtained correctly.")
+print("")
+print("Input language: "+ str(inputLanguage))
+print("Output language: "+ str(outputLanguage))
+
+print("")
+print("")
+print("**************************************************************************")
+print("Google Translator client:")
+print("**************************************************************************")
+print("")
+print("Configuring Google Translator client ...")
+
+googleTranslatorEngineClient = Translator()
+
+print("Client configuration done.")
 
 while True:
 
@@ -104,31 +144,86 @@ while True:
     print("")
     print("Analyzing data text...")
 
+    print("")
+    print("")
+    print("**************************************************************************")
+    print("Processing:")
+    print("**************************************************************************")
+
     try:
+        try:
+            # Sending request to Google Translator API
+            print("")
+            print("Connecting with Google Translator server ...")
 
-        dataAnalyzed = TextBlob(dataText)
+            print("")
+            print("Translating from "+str(inputLanguage)+ " to "+ str(outputLanguage)+" ...")
 
-        dataTranslated=str(dataAnalyzed.translate(to='en'))
+            dataTranslated = googleTranslatorEngineClient.translate(str(dataText),dest=str(outputLanguage), src=str(inputLanguage))
+            dataTranslated = dataTranslated.text
+            print("")
+            print("Text translated.")
 
-        dataAnalyzed = TextBlob(dataTranslated)
-        print("Data translated: "+ dataTranslated)
+            print("")
+            print("Server response done.")
 
-        dataResults=str(dataAnalyzed.sentiment)
+            print("")
+            print("")
+            print("**************************************************************************")
+            print("Results:")
+            print("**************************************************************************")
+            print("")
+            print("Input text in "+str(inputLanguage)+" language: "+ str(dataToTranslate))
+            print("")
+            print("Output text in "+str(outputLanguage)+" language: "+ str(dataTranslated))
 
-        print("")
-        print("Data analyzed.")
-        print("Results: "+ dataResults)
+            dataAnalyzed = TextBlob(str(dataTranslated))
+            dataResults=str(dataAnalyzed.sentiment)
+
+            print("")
+            print("")
+            print("**************************************************************************")
+            print("Sentiment analysis results:")
+            print("**************************************************************************")
+            print("")
+            print("Results: "+ dataResults)
+
+        except:
+            dataAnalyzed = TextBlob(dataText)
+
+            dataTranslated=str(dataAnalyzed.translate(to='en'))
+
+            dataAnalyzed = TextBlob(dataTranslated)
+            print("Data translated: "+ dataTranslated)
+
+            dataResults=str(dataAnalyzed.sentiment)
+
+            print("")
+            print("")
+            print("**************************************************************************")
+            print("Sentiment analysis results:")
+            print("**************************************************************************")
+            print("")
+            print("Results: "+ dataResults)
+
     except:
-        print("Sorry, unknown error")
+        print("")
+        print("Sorry, i could´t resolve your request.")
         dataResults="Unknown error"
-
 
     # Send mirror coordinates
     outputBottle.clear()
     outputBottle.addString(dataResults)
     sentimentAnalysis_outputPort.write(outputBottle)
 
+
 # Close YARP ports
 print("Closing YARP ports...")
 sentimentAnalysis_inputPort.close()
 sentimentAnalysis_outputPort.close()
+
+print("")
+print("")
+print("**************************************************************************")
+print("Program finished")
+print("**************************************************************************")
