@@ -21,6 +21,7 @@
 # Libraries
 
 import datetime
+import configparser
 from googletrans import Translator
 import os
 import platform
