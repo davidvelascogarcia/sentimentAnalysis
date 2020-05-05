@@ -26,6 +26,7 @@ from googletrans import Translator
 import os
 import platform
 from textblob import TextBlob
+import time
 import yarp
 
 
@@ -103,15 +104,32 @@ print("*************************************************************************
 print("Translator configuration:")
 print("**************************************************************************")
 
-# Get languages data
-print("")
-print("Getting languages data ...")
-languagesData = configparser.ConfigParser()
-languagesData.read('../config/languages.ini')
-languagesData.sections()
+loopControlIniExist = 0
 
-inputLanguage = languagesData['Languages']['language-input']
-outputLanguage = languagesData['Languages']['language-output']
+while int(loopControlIniExist)==0:
+
+    try:
+        # Get languages data
+        print("")
+        print("Getting languages data ...")
+        languagesData = configparser.ConfigParser()
+        languagesData.read('../config/languages.ini')
+        languagesData.sections()
+
+        inputLanguage = languagesData['Languages']['language-input']
+        outputLanguage = languagesData['Languages']['language-output']
+        loopControlIniExist = 1
+    except:
+        print("")
+        print("**************************************************************************")
+        print("Error file not founded:")
+        print("**************************************************************************")
+        # File not exist
+        print("")
+        print("Error, languages.ini not founded, i will check again in 4 seconds ...")
+        print("Waiting 4 seconds to next check ...")
+        print("")
+        time.sleep(4)
 
 print("Data obtained correctly.")
 print("")
