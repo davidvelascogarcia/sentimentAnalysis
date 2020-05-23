@@ -39,10 +39,10 @@ print("*************************************************************************
 print("**************************************************************************")
 
 print("")
-print("Starting system...")
+print("Starting system ...")
 
 print("")
-print("Loading Sentiment Analysis engine...")
+print("Loading Sentiment Analysis engine ...")
 
 print("")
 print("")
@@ -51,14 +51,14 @@ print("YARP configuration:")
 print("**************************************************************************")
 
 print("")
-print("Initializing YARP network...")
+print("Initializing YARP network ...")
 
 # Init YARP Network
 yarp.Network.init()
 
 
 print("")
-print("Opening data input port with name /sentimentAnalysis/data:i ...")
+print("[INFO] Opening data input port with name /sentimentAnalysis/data:i ...")
 
 # Open input data port
 sentimentAnalysis_inputPort = yarp.Port()
@@ -69,7 +69,7 @@ sentimentAnalysis_inputPort.open(sentimentAnalysis_inputPortName)
 inputBottle=yarp.Bottle()
 
 print("")
-print("Opening data output port with name /sentimentAnalysis/data:o ...")
+print("[INFO] Opening data output port with name /sentimentAnalysis/data:o ...")
 
 # Open output data port
 sentimentAnalysis_outputPort = yarp.Port()
@@ -81,11 +81,11 @@ outputBottle=yarp.Bottle()
 
 
 print("")
-print("Initializing sentimentAnalysis engine...")
+print("Initializing sentimentAnalysis engine ...")
 
 # Get system configuration
 print("")
-print("Detecting system and release version...")
+print("Detecting system and release version ...")
 systemPlatform = platform.system()
 systemRelease = platform.release()
 print("")
@@ -126,12 +126,11 @@ while int(loopControlIniExist)==0:
         print("**************************************************************************")
         # File not exist
         print("")
-        print("Error, languages.ini not founded, i will check again in 4 seconds ...")
-        print("Waiting 4 seconds to next check ...")
+        print("[ERROR] Error, languages.ini not founded, i will check again in 4 seconds ...")
         print("")
         time.sleep(4)
 
-print("Data obtained correctly.")
+print("[INFO] Data obtained correctly.")
 print("")
 print("Input language: "+ str(inputLanguage))
 print("Output language: "+ str(outputLanguage))
@@ -146,7 +145,7 @@ print("Configuring Google Translator client ...")
 
 googleTranslatorEngineClient = Translator()
 
-print("Client configuration done.")
+print("[INFO] Client configuration done.")
 
 while True:
 
@@ -157,7 +156,7 @@ while True:
     sentimentAnalysis_inputPort.read(inputBottle)
     dataText = inputBottle.toString()
 
-    print("Data received: "+ dataText)
+    print("[RESULTS] Data received: "+ dataText)
 
     # Process data
     print("")
@@ -181,10 +180,10 @@ while True:
             dataTranslated = googleTranslatorEngineClient.translate(str(dataText),dest=str(outputLanguage), src=str(inputLanguage))
             dataTranslated = dataTranslated.text
             print("")
-            print("Text translated.")
+            print("[INFO] Text translated.")
 
             print("")
-            print("Server response done.")
+            print("[INFO] Server response done.")
 
             print("")
             print("")
@@ -192,9 +191,9 @@ while True:
             print("Results:")
             print("**************************************************************************")
             print("")
-            print("Input text in "+str(inputLanguage)+" language: "+ str(dataToTranslate))
+            print("[RESULTS] Input text in "+str(inputLanguage)+" language: "+ str(dataToTranslate))
             print("")
-            print("Output text in "+str(outputLanguage)+" language: "+ str(dataTranslated))
+            print("[RESULTS] Output text in "+str(outputLanguage)+" language: "+ str(dataTranslated))
 
             dataAnalyzed = TextBlob(str(dataTranslated))
             dataResults=str(dataAnalyzed.sentiment)
@@ -205,7 +204,7 @@ while True:
             print("Sentiment analysis results:")
             print("**************************************************************************")
             print("")
-            print("Results: "+ dataResults)
+            print("[RESULTS] Request results: "+ dataResults)
 
         except:
             dataAnalyzed = TextBlob(dataText)
@@ -213,7 +212,7 @@ while True:
             dataTranslated=str(dataAnalyzed.translate(to='en'))
 
             dataAnalyzed = TextBlob(dataTranslated)
-            print("Data translated: "+ dataTranslated)
+            print("[INFO] Data translated: "+ dataTranslated)
 
             dataResults=str(dataAnalyzed.sentiment)
 
@@ -223,11 +222,11 @@ while True:
             print("Sentiment analysis results:")
             print("**************************************************************************")
             print("")
-            print("Results: "+ dataResults)
+            print("[RESULTS] Request results: "+ dataResults)
 
     except:
         print("")
-        print("Sorry, i could´t resolve your request.")
+        print("[ERROR] Sorry, i could´t resolve your request.")
         dataResults="Unknown error"
 
     # Send mirror coordinates
